@@ -9,6 +9,7 @@ app.use(express.json());
 app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/vendors", require("./routes/vendorRoutes"));
 app.use("/api/categories", require("./routes/categoryRoutes"));
+app.use("/api/cart", require("./routes/cartRoutes"));
 
 app.get("/", (req, res) => {
   res.json({
