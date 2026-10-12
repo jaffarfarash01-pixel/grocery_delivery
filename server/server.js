@@ -4,6 +4,8 @@ const sequelize = require("./config/database");
 const app = express();
 
 app.use(express.json());
+app.use("/api/products", require("./routes/productRoutes"));
+app.use("/api/vendors", require("./routes/vendorRoutes"));
 
 app.get("/", (req, res) => {
   res.json({
