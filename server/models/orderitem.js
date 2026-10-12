@@ -1,26 +1,54 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+
+"use strict";
+
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
-  class OrderItem extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+  class OrderItem extends Model {}
+
+  OrderItem.init(
+    {
+      orderId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+
+      productId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: {
+            msg: "Quantity must be an integer",
+          },
+          min: {
+            args: [1],
+            msg: "Quantity must be at least 1",
+          },
+        },
+      },
+
+      price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        validate: {
+          min: {
+            args: [0],
+            msg: "Price cannot be negative",
+          },
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "OrderItem",
+      tableName: "order_items",
     }
-  }
-  OrderItem.init({
-    orderId: DataTypes.INTEGER,
-    productId: DataTypes.INTEGER,
-    quantity: DataTypes.INTEGER,
-    price: DataTypes.DECIMAL
-  }, {
-    sequelize,
-    modelName: 'OrderItem',
-  });
+  );
+
   return OrderItem;
 };
