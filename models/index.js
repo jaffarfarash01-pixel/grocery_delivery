@@ -1,0 +1,125 @@
+const { Sequelize, DataTypes } = require("sequelize");
+
+const sequelize = require("../config/database");
+// const order = require("./order");
+// const subscription = require("./subscription");
+
+const User = require("./user")(sequelize, DataTypes);
+const Vendor = require("./vendor")(sequelize, DataTypes);
+const Category = require("./category")(sequelize, DataTypes);
+const Product = require("./product")(sequelize, DataTypes);
+const Cart = require("./cart")(sequelize, DataTypes);
+const CartItem = require("./cartitem")(sequelize, DataTypes);
+const Order = require("./order")(sequelize, DataTypes);
+const OrderItem = require("./orderitem")(sequelize, DataTypes);
+const Subscription = require("./subscription")(sequelize, DataTypes);
+
+// Vendor → Products
+Vendor.hasMany(Product, {
+  foreignKey: "vendorId",
+  as: "products",
+});
+
+Product.belongsTo(Vendor, {
+  foreignKey: "vendorId",
+  as: "vendor",
+});
+
+// Category → Products
+Category.hasMany(Product, {
+  foreignKey: "categoryId",
+  as: "products",
+});
+
+Product.belongsTo(Category, {
+  foreignKey: "categoryId",
+  as: "category",
+});
+
+// User → Cart
+User.hasOne(Cart, {
+  foreignKey: "userId",
+  as: "cart",
+});
+
+Cart.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+// Cart → CartItems
+Cart.hasMany(CartItem, {
+  foreignKey: "cartId",
+  as: "items",
+});
+
+CartItem.belongsTo(Cart, {
+  foreignKey: "cartId",
+  as: "cart",
+});
+
+// Product → CartItems
+Product.hasMany(CartItem, {
+  foreignKey: "productId",
+  as: "cartItems",
+});
+
+CartItem.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "product",
+});
+
+// user => orders
+User.hasMany(Order , {
+  foreignKey: "userId",
+  as: "orders",
+});
+Order.belongsTo(User , {
+  foreignKey: "userId",
+  as: "user",
+});
+
+// Order → OrderItems
+Order.hasMany(OrderItem, {
+  foreignKey: "orderId",
+  as: "items",
+});
+OrderItem.belongsTo(Order, {
+  foreignKey: "orderId",
+  as: "order",
+});
+
+// Product → OrderItems
+Product.hasMany(OrderItem, {
+  foreignKey: "productId",
+  as: "orderItems",
+});
+OrderItem.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "product",
+});
+
+// User → Subscriptions
+User.hasMany(Subscription, {
+  foreignKey: "userId",
+  as: "subscriptions",
+});
+
+Subscription.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+
+module.exports = {
+  sequelize,
+  User,
+  Vendor,
+  Category,
+  Product,
+  Cart,
+  CartItem,
+  Order,
+  OrderItem,
+  Subscription,
+};
