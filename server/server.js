@@ -18,8 +18,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// router.post("/", createCategory);
-// router.post("/", getAllcategories);
 
 const PORT = process.env.PORT || 5000;
 
