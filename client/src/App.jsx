@@ -1,6 +1,9 @@
+
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import ProductList from "./ProductList";
-import Cart from "./Cart";
+import ProductList from "./pages/ProductList";
+import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
+import Subscriptions from "./pages/Subscriptions";
 import "./App.css";
 
 function Home() {
@@ -19,15 +22,29 @@ function App() {
         <header>
           <h1>FreshBasket</h1>
           <p>Fresh groceries, delivered to your door.</p>
+
           <nav>
-            <Link to="/">Home</Link> | <Link to="/cart">My Cart</Link>
+            <Link to="/">Home</Link>
+            {" | "}
+            <Link to="/cart">My Cart</Link>
+            {" | "}
+            <Link to="/orders">My Orders</Link>
+            {" | "}
+            <Link to="/subscriptions">Subscriptions</Link>
           </nav>
         </header>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route
+              path="/subscriptions"
+              element={<Subscriptions />}
+            />
+          </Routes>
+        </main>
       </div>
     </BrowserRouter>
   );

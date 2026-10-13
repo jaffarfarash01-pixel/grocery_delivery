@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/database");
 const order = require("./order");
+const subscription = require("./subscription");
 
 const User = require("./user")(sequelize, DataTypes);
 const Vendor = require("./vendor")(sequelize, DataTypes);
@@ -11,6 +12,7 @@ const Cart = require("./cart")(sequelize, DataTypes);
 const CartItem = require("./cartitem")(sequelize, DataTypes);
 const Order = require("./order")(sequelize, DataTypes);
 const OrderItem = require("./orderitem")(sequelize, DataTypes);
+const Subscription = require("./subscription")(sequelize, DataTypes);
 
 // Vendor → Products
 Vendor.hasMany(Product, {
@@ -97,6 +99,18 @@ OrderItem.belongsTo(Product, {
   as: "product",
 });
 
+// User → Subscriptions
+User.hasMany(Subscription, {
+  foreignKey: "userId",
+  as: "subscriptions",
+});
+
+Subscription.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+
 module.exports = {
   sequelize,
   User,
@@ -107,4 +121,5 @@ module.exports = {
   CartItem,
   Order,
   OrderItem,
+  Subscription,
 };
