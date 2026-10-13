@@ -36,7 +36,7 @@ Product.belongsTo(Category, {
   as: "category",
 });
 
-// User → Cart
+// User Cart
 User.hasOne(Cart, {
   foreignKey: "userId",
   as: "cart",
@@ -47,7 +47,7 @@ Cart.belongsTo(User, {
   as: "user",
 });
 
-// Cart → CartItems
+// Cart CartItems
 Cart.hasMany(CartItem, {
   foreignKey: "cartId",
   as: "items",
@@ -58,7 +58,7 @@ CartItem.belongsTo(Cart, {
   as: "cart",
 });
 
-// Product → CartItems
+// Product CartItems
 Product.hasMany(CartItem, {
   foreignKey: "productId",
   as: "cartItems",

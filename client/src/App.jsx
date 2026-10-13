@@ -1,9 +1,13 @@
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Subscriptions from "./pages/Subscriptions";
+import Footer from "./components/Footer";
+
+import Navbar from "./components/Navbar";
 import "./App.css";
 
 function Home() {
@@ -19,20 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="container">
-        <header>
-          <h1>FreshBasket</h1>
-          <p>Fresh groceries, delivered to your door.</p>
-
-          <nav>
-            <Link to="/">Home</Link>
-            {" | "}
-            <Link to="/cart">My Cart</Link>
-            {" | "}
-            <Link to="/orders">My Orders</Link>
-            {" | "}
-            <Link to="/subscriptions">Subscriptions</Link>
-          </nav>
-        </header>
+        <Navbar />
 
         <main>
           <Routes>
@@ -45,6 +36,12 @@ function App() {
             />
           </Routes>
         </main>
+
+         <Footer
+    storeName="FreshBasket"
+    message="Fresh groceries, delivered to your door."
+  />
+
       </div>
     </BrowserRouter>
   );
