@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/database");
-const order = require("./order");
-const subscription = require("./subscription");
+// const order = require("./order");
+// const subscription = require("./subscription");
 
 const User = require("./user")(sequelize, DataTypes);
 const Vendor = require("./vendor")(sequelize, DataTypes);

@@ -28,16 +28,21 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
+
 sequelize
   .authenticate()
-  .then(() => {
+  .then(async () => {
     console.log("MySQL database connected successfully");
+
+    await require("./models").sequelize.sync();
+
+    console.log("Database models synchronized successfully");
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.error("Unable to connect to database:", error.message);
+    console.error("Unable to connect or initialize database:", error.message);
   });
 

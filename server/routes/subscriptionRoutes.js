@@ -22,21 +22,44 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (!plans[planName]) {
+    if (!Object.prototype.hasOwnProperty.call(plans, planName)) {
       return res.status(400).json({
         message: "Invalid subscription plan",
       });
     }
 
-    const selectedDate = new Date(`${startDate}T00:00:00`);
-
+    // Validate YYYY-MM-DD date format
     if (
-      Number.isNaN(selectedDate.getTime()) ||
-      selectedDate.toISOString().slice(0, 10) !== startDate ||
-      startDate < new Date().toLocaleDateString("en-CA")
+      typeof startDate !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(startDate)
     ) {
       return res.status(400).json({
-        message: "Please select a valid date that is not in the past",
+        message: "Date must be in YYYY-MM-DD format",
+      });
+    }
+
+    // Validate the actual calendar date without timezone conversion
+    const [year, month, day] = startDate.split("-").map(Number);
+    const selectedDate = new Date(Date.UTC(year, month - 1, day));
+
+    if (
+      selectedDate.getUTCFullYear() !== year ||
+      selectedDate.getUTCMonth() !== month - 1 ||
+      selectedDate.getUTCDate() !== day
+    ) {
+      return res.status(400).json({
+        message: "Please enter a valid calendar date",
+      });
+    }
+
+    // Compare date-only strings to avoid timezone issues
+    const now = new Date();
+    const today =
+      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
+    if (startDate < today) {
+      return res.status(400).json({
+        message: "Please select a date that is not in the past",
       });
     }
 
@@ -56,14 +79,14 @@ router.post("/", async (req, res) => {
       status: "active",
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Subscription booked successfully",
       subscription,
     });
   } catch (error) {
     console.error("Subscription booking error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to book subscription",
     });
   }
@@ -73,15 +96,17 @@ router.post("/", async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   try {
     const subscriptions = await Subscription.findAll({
-      where: { userId: req.params.userId },
+      where: {
+        userId: req.params.userId,
+      },
       order: [["createdAt", "DESC"]],
     });
 
-    res.json(subscriptions);
+    return res.status(200).json(subscriptions);
   } catch (error) {
     console.error("Fetch subscriptions error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch subscriptions",
     });
   }
@@ -120,14 +145,14 @@ router.put("/:id/cancel", async (req, res) => {
     subscription.status = "cancelled";
     await subscription.save();
 
-    res.json({
+    return res.status(200).json({
       message: "Subscription cancelled successfully",
       subscription,
     });
   } catch (error) {
     console.error("Cancel subscription error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to cancel subscription",
     });
   }
